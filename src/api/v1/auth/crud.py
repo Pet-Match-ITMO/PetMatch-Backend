@@ -1,7 +1,7 @@
-import os
-
 from loguru import logger
 from passlib.context import CryptContext
+
+from quart import abort
 
 from sqlalchemy import select
 from sqlalchemy.exc import OperationalError, IntegrityError
@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.user import User
 from .scheme import RegisterRequest, LoginRequest
+from .exceptions import DatabaseException
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -30,11 +31,11 @@ async def create_user(session: AsyncSession, user_data: RegisterRequest):
     except OperationalError as e:
         error_text = f"Database connection error: {e}"
         logger.error(error_text)
-        raise Exception(error_text)
+        raise DatabaseException(error_text)
     except IntegrityError as e:
         error_text = f"User cannot be created: {e}"
         logger.error(error_text)
-        raise Exception(error_text)
+        abort(400, description=error_text)
 
 
 async def get_user_by_email(session: AsyncSession, email: str):
@@ -44,7 +45,7 @@ async def get_user_by_email(session: AsyncSession, email: str):
     except OperationalError as e:
         error_text = f"Database connection error: {e}"
         logger.error(error_text)
-        raise Exception(error_text)
+        raise DatabaseException(error_text)
 
 
 async def authenticate_user(session: AsyncSession, credentials: LoginRequest):
@@ -62,4 +63,4 @@ async def authenticate_user(session: AsyncSession, credentials: LoginRequest):
     except OperationalError as e:
         error_text = f"Database connection error: {e}"
         logger.error(error_text)
-        raise Exception(error_text)
+        raise DatabaseException(error_text)
