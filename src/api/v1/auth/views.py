@@ -9,7 +9,6 @@ from .scheme import (
     RegisterRequest,
     LoginRequest,
     AuthResponse,
-    ErrorResponse,
 )
 from .exceptions import DatabaseException
 
