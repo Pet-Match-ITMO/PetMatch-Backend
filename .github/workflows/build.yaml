@@ -1,5 +1,9 @@
 name: build
 
+permissions:
+    contents: read
+    packages: write
+
 on:
     push:
         branches: ["main"]
@@ -26,4 +30,3 @@ jobs:
               with:
                 push: true
                 tags: ghcr.io/petmatch/backend:${{ github.sha }}
-
