@@ -14,9 +14,10 @@ jobs:
     test:
         uses: ./.github/workflows/test.yaml
     
-    build:
+    build-test:
         runs-on: ubuntu-latest
         needs: test
+        if: github.event == 'pull_request'
         steps:
             - uses: actions/checkout@v4
             - name: Log in to GHCR
@@ -29,4 +30,22 @@ jobs:
               uses: docker/build-push-action@v6
               with:
                 push: true
-                tags: ghcr.io/pet-match-itmo/backend:${{ github.sha }}
+                tags: ghcr.io/pet-match-itmo/backend:test-${{ github.sha }}
+    
+    build:
+        runs-on: ubuntu-latest
+        needs: test
+        if: github.event == 'push'
+        steps:
+            - uses: actions/checkout@v4
+            - name: Log in to GHCR
+              uses: docker/login-action@v3
+              with:
+                registry: ghcr.io
+                username: ${{ github.actor }}
+                password: ${{ secrets.GITHUB_TOKEN }}
+            - name: Build and push
+              uses: docker/build-push-action@v6
+              with:
+                push: true
+                tags: ghcr.io/pet-match-itmo/backend:test-${{ github.sha }}
