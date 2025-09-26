@@ -9,7 +9,7 @@ RUN sh /uv-installer.sh && rm /uv-installer.sh
 # Ensure the installed binary is on the `PATH`
 ENV PATH="/root/.local/bin/:$PATH"
 
-FROM python:3.12-slim
+FROM python:3.12-slim-bookworm
 
 COPY --from=build /root/.local/bin/uv /root/.local/bin/uvx /bin/
 
