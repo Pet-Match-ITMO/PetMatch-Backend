@@ -7,7 +7,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import OperationalError, IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.db.user import User
+from src.db.models.user import User
 from .scheme import RegisterRequest, LoginRequest
 from .exceptions import DatabaseException
 
@@ -20,7 +20,6 @@ async def create_user(session: AsyncSession, user_data: RegisterRequest):
     try:
         user = User(
             email=user_data.email,
-            username=user_data.username,
             password=hashed_password
         )
         

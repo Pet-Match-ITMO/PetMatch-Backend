@@ -1,6 +1,8 @@
 from .utils.helper import DBHelper
-from .base import Base
-from .user import User
+from .models import (
+    Base,
+    User,
+)
 
 __all__ = [
     "DBHelper",

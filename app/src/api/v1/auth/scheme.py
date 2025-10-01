@@ -5,7 +5,6 @@ from pydantic import BaseModel, model_validator, ConfigDict
 class RegisterRequest(BaseModel):
     email: str
     password: str
-    username: str
 
     @model_validator(mode='after')
     def validate_email(self):

@@ -1,4 +1,4 @@
-from .views import auth_bp
+from .handlers import auth_bp
 
 
 __all__ = [

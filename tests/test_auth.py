@@ -9,7 +9,7 @@ from quart_schema import QuartSchema
 from werkzeug.exceptions import HTTPException
 
 from src.api.v1.auth.views import auth_bp
-from src.db.base import Base
+from db.models.base import Base
 from src.db.utils.helper import DBHelper
 from src.scheme import ErrorResponse
 
@@ -58,7 +58,6 @@ async def test_register_user(app):
     user_data = {
         "email": "test@example.com",
         "password": "securepassword123",
-        "username": "testuser"
     }
 
     response = await client.post(
@@ -80,7 +79,6 @@ async def test_register_duplicate_email(app):
     user_data = {
         "email": "duplicate@example.com",
         "password": "password123",
-        "username": "user1"
     }
 
     # First registration should succeed
@@ -102,7 +100,6 @@ async def test_login_success(app):
     user_data = {
         "email": "login@example.com",
         "password": "validpassword",
-        "username": "loginuser"
     }
 
     # Register user first
@@ -126,7 +123,6 @@ async def test_login_invalid_password(app):
     user_data = {
         "email": "invalidpass@example.com",
         "password": "correctpassword",
-        "username": "testuser"
     }
 
     # Register user
