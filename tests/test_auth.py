@@ -8,10 +8,10 @@ from quart import Quart
 from quart_schema import QuartSchema
 from werkzeug.exceptions import HTTPException
 
-from src.api.v1.auth.views import auth_bp
-from db.models.base import Base
-from src.db.utils.helper import DBHelper
-from src.scheme import ErrorResponse
+from app.src.api.v1.auth.handlers import auth_bp
+from app.src.db.models.base import Base
+from app.src.db.utils.helper import DBHelper
+from app.src.scheme import ErrorResponse
 
 # Set environment variables before any imports
 os.environ['QUART_SCHEMA_CONVERT_CASING'] = 'False'

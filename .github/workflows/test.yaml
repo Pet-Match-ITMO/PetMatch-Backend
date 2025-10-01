@@ -33,6 +33,9 @@ jobs:
         runs-on: ubuntu-latest
         env:
             UV_CACHE_DIR: /tmp/.uv-cache
+            TEST_DB_URL: ${{ secrets.TEST_DB_URL }}
+            JWT_SECRET: ${{ secrets.JWT_SECRET }}
+            QUART_SCHEMA_CONVERT_CASING: ${{ secrets.QUART_SCHEMA_CONVERT_CASING }}
         steps:
             - uses: actions/checkout@v5
 
