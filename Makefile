@@ -15,7 +15,6 @@ logs:
 
 migration:
 	sudo docker compose -f docker-compose.yaml --env-file .env run app uv run alembic revision --autogenerate -m "$(message)"
-	sudo docker copy 
 
 migrate:
 	sudo docker compose -f docker-compose.yaml --env-file .env run app uv run alembic upgrade head
