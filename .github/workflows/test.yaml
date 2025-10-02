@@ -33,10 +33,6 @@ jobs:
         runs-on: ubuntu-latest
         env:
             UV_CACHE_DIR: /tmp/.uv-cache
-            TEST_DB_URL: ${{ secrets.TEST_DB_URL }}
-            JWT_SECRET: ${{ secrets.JWT_SECRET }}
-            QUART_SCHEMA_CONVERT_CASING: ${{ secrets.QUART_SCHEMA_CONVERT_CASING }}
-            PYTHONPATH: ${{ github.workspace }}/app
         steps:
             - uses: actions/checkout@v5
 
@@ -55,4 +51,9 @@ jobs:
               run: uv sync --locked
             
             - name: Run tests
+              env:
+                TEST_DB_URL: ${{ vars.TEST_DB_URL }}
+                JWT_SECRET: ${{ vars.JWT_SECRET }}
+                QUART_SCHEMA_CONVERT_CASING: ${{ vars.QUART_SCHEMA_CONVERT_CASING }}
+                PYTHONPATH: ${{ github.workspace }}/app
               run: uv run pytest -v
