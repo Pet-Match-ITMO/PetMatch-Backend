@@ -1,0 +1,1 @@
+from .decorators import redis_cache

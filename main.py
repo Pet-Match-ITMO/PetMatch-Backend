@@ -15,7 +15,6 @@ def create_app():
     app = Quart(__name__)
     QuartSchema(app)
     app.register_blueprint(api_bp)
-
     app = cors(
         app,
         allow_origin="*",
@@ -34,8 +33,6 @@ def create_app():
     app.errorhandler(HTTPException)(create_error_handler)
 
     return app
-
-
 
 
 if __name__ == "__main__":
