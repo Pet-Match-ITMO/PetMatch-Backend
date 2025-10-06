@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# Скрипт для генерации .env файла из переменных окружения
+# Используется в CI/CD для автоматического создания конфигурации
+
+set -e
+
+ENV_FILE=".env"
+
+echo "🔧 Генерируем .env файл..."
+
+# Проверяем обязательные переменные
+required_vars=(
+    "DB_URL"
+    "POSTGRES_DB" 
+    "POSTGRES_USER"
+    "POSTGRES_PASSWORD"
+    "JWT_SECRET"
+    "QUART_SCHEMA_CONVERT_CASING"
+)
+
+for var in "${required_vars[@]}"; do
+    if [ -z "${!var}" ]; then
+        echo "❌ Ошибка: переменная $var не установлена"
+        exit 1
+    fi
+done
+
+# Создаем .env файл
+cat > "$ENV_FILE" << EOF
+# Database Configuration
+DB_URL=${DB_URL}
+POSTGRES_DB=${POSTGRES_DB}
+POSTGRES_USER=${POSTGRES_USER}
+POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+# JWT Configuration
+JWT_SECRET=${JWT_SECRET}
+
+# Quart Configuration
+QUART_SCHEMA_CONVERT_CASING=${QUART_SCHEMA_CONVERT_CASING}
+
+# Generated at: $(date)
+EOF
+
+# Устанавливаем безопасные права
+chmod 600 "$ENV_FILE"
+
+echo "✅ .env файл создан: $ENV_FILE"
+echo "🔒 Права установлены: 600 (только владелец может читать/писать)"
+
+# Показываем содержимое (без секретов)
+echo ""
+echo "📋 Содержимое .env файла:"
+echo "========================"
+sed 's/=.*/=***/' "$ENV_FILE"
+echo "========================"

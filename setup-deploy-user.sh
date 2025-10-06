@@ -39,6 +39,32 @@ generate_ssh_keys() {
 # Генерируем SSH ключи
 generate_ssh_keys
 
+# Функция для создания SSH ключа для GitHub
+setup_github_ssh() {
+    echo "🔑 Настраиваем SSH для GitHub..."
+    
+    GITHUB_KEY_PATH="/home/$DEPLOY_USER/.ssh/github_key"
+    
+    # Создаем SSH ключ для GitHub от имени deploy пользователя
+    sudo -u "$DEPLOY_USER" ssh-keygen -t rsa -b 4096 -C "deploy@petmatch-github" -f "$GITHUB_KEY_PATH" -N ""
+    
+    # Создаем SSH config
+    sudo -u "$DEPLOY_USER" tee "/home/$DEPLOY_USER/.ssh/config" > /dev/null << EOF
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/github_key
+    IdentitiesOnly yes
+EOF
+    
+    # Устанавливаем правильные права
+    sudo chmod 600 "/home/$DEPLOY_USER/.ssh/config"
+    sudo chmod 600 "$GITHUB_KEY_PATH"
+    sudo chmod 644 "$GITHUB_KEY_PATH.pub"
+    
+    echo "✅ SSH ключ для GitHub создан"
+}
+
 echo "🔧 Создаем пользователя для деплоя..."
 
 # Создаем пользователя deploy
@@ -79,6 +105,9 @@ echo "✅ Директория проекта создана: $PROJECT_PATH"
 echo "$DEPLOY_USER ALL=(ALL) NOPASSWD: /usr/bin/docker, /usr/bin/docker-compose" | sudo tee "/etc/sudoers.d/$DEPLOY_USER"
 echo "✅ Sudo права настроены"
 
+# Настраиваем SSH для GitHub
+setup_github_ssh
+
 echo ""
 echo "🎉 Настройка деплоя завершена!"
 echo ""
@@ -91,10 +120,17 @@ echo "------------------------------------------------------------"
 cat "$KEY_PATH"
 echo "------------------------------------------------------------"
 echo ""
+echo "🔑 SSH ключ для GitHub (добавьте в GitHub → Settings → SSH keys):"
+echo "------------------------------------------------------------"
+sudo cat "/home/$DEPLOY_USER/.ssh/github_key.pub"
+echo "------------------------------------------------------------"
+echo ""
 echo "📝 Следующие шаги:"
 echo "1. Скопируйте приватный ключ выше в GitHub Secret SERVER_SSH_KEY"
-echo "2. Клонируйте репозиторий: sudo -u $DEPLOY_USER git clone <repo> $PROJECT_PATH"
-echo "3. Создайте .env файл в проекте"
-echo "4. Проверьте подключение: ssh -i $KEY_PATH $DEPLOY_USER@localhost"
+echo "2. Скопируйте SSH ключ для GitHub выше в GitHub → Settings → SSH and GPG keys"
+echo "3. Клонируйте репозиторий:"
+echo "   sudo -u $DEPLOY_USER git clone git@github.com:Pet-Match-ITMO/PetMatch-Backend.git $PROJECT_PATH"
+echo "4. Создайте .env файл в проекте: sudo -u $DEPLOY_USER nano $PROJECT_PATH/.env"
+echo "5. Проверьте SSH подключение: sudo -u $DEPLOY_USER ssh -T git@github.com"
 echo ""
 echo "✅ Готово! Теперь GitHub Actions может автоматически деплоить проект."

@@ -67,6 +67,16 @@ jobs:
                 script: |
                   cd ${{ secrets.SERVER_PROJECT_PATH }}
                   git pull origin main
+                  
+                  # Экспортируем все переменные окружения
+                  export DB_URL="${{ secrets.DB_URL }}"
+                  export POSTGRES_DB="${{ secrets.POSTGRES_DB }}"
+                  export POSTGRES_USER="${{ secrets.POSTGRES_USER }}"
+                  export POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}"
+                  export JWT_SECRET="${{ secrets.JWT_SECRET }}"
+                  export QUART_SCHEMA_CONVERT_CASING="${{ secrets.QUART_SCHEMA_CONVERT_CASING }}"
                   export GHCR_TOKEN="${{ secrets.GHCR_TOKEN }}"
                   export GHCR_USERNAME="${{ secrets.GHCR_USERNAME }}"
+                  
+                  # Запускаем деплой (автоматически сгенерирует .env)
                   ./deploy.sh
