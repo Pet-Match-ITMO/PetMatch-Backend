@@ -29,7 +29,12 @@ target_metadata = Base.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-config.set_main_option('sqlalchemy.url', os.environ['DB_URL'])
+# Используем отдельный URL для Alembic (синхронный драйвер)
+alembic_db_url = os.environ.get('ALEMBIC_DB_URL', os.environ['DB_URL'])
+# Убеждаемся что используется синхронный драйвер для Alembic
+if '+asyncpg' in alembic_db_url:
+    alembic_db_url = alembic_db_url.replace('+asyncpg', '')
+config.set_main_option('sqlalchemy.url', alembic_db_url)
 
 
 def run_migrations_offline() -> None:
