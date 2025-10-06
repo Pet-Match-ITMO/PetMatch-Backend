@@ -75,7 +75,7 @@ jobs:
                   export POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}"
                   export JWT_SECRET="${{ secrets.JWT_SECRET }}"
                   export QUART_SCHEMA_CONVERT_CASING="${{ secrets.QUART_SCHEMA_CONVERT_CASING }}"
-                  export GHCR_TOKEN="${{ secrets.GHCR_TOKEN }}"
+                  export GHCR_TOKEN="${{ secrets.GITHUB_TOKEN }}"
                   export GHCR_USERNAME="${{ github.actor }}"
                   
                   # Запускаем деплой (автоматически сгенерирует .env)
