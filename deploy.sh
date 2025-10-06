@@ -19,6 +19,16 @@ else
     echo "✅ Используем существующий .env файл"
 fi
 
+# Создаем общую сеть если её нет
+echo "🌐 Проверяем общую сеть..."
+if ! docker network ls | grep -q petmatch-network; then
+    echo "🌐 Создаем общую сеть petmatch-network..."
+    docker network create petmatch-network
+    echo "✅ Сеть petmatch-network создана"
+else
+    echo "✅ Сеть petmatch-network уже существует"
+fi
+
 # Логинимся в GitHub Container Registry
 echo "🔐 Авторизация в GitHub Container Registry..."
 echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USERNAME" --password-stdin

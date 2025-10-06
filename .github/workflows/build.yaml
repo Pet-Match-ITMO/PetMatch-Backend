@@ -78,5 +78,11 @@ jobs:
                   export GHCR_TOKEN="${{ secrets.GITHUB_TOKEN }}"
                   export GHCR_USERNAME="${{ github.actor }}"
                   
+                  # Создаем общую сеть если её нет
+                  if ! docker network ls | grep -q petmatch-network; then
+                    echo "🌐 Создаем общую сеть petmatch-network..."
+                    docker network create petmatch-network
+                  fi
+                  
                   # Запускаем деплой (автоматически сгенерирует .env)
                   ./deploy.sh

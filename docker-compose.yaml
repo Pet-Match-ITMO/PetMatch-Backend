@@ -11,6 +11,8 @@ services:
       - QUART_SCHEMA_CONVERT_CASING=${QUART_SCHEMA_CONVERT_CASING}
     volumes:
       - ./app/alembic/versions:/app/alembic/versions
+    networks:
+      - petmatch-network
 
   db:
     image: postgres:16
@@ -22,7 +24,13 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - pg_data:/var/lib/postgresql/data
+    networks:
+      - petmatch-network
 
 volumes:
   pg_data:
     name: pg_data
+
+networks:
+  petmatch-network:
+    driver: bridge
