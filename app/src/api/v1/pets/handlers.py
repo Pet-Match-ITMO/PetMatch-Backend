@@ -8,8 +8,8 @@ import httpx
 
 dotenv.load_dotenv()
 ML_API_URL = os.environ['ML_API_URL']
-
 pets_bp = Blueprint("pets", __name__, url_prefix="/auth")
+
 
 @pets_bp.get("/get_pets")
 @validate_response(list[PetsResponse], 200)
@@ -36,4 +36,4 @@ async def get_next_pet(data: PetsRequest):
         print('Error getting next pet')
         return []
     return PetsResponse(**response.json())
-    
+
