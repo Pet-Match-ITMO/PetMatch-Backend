@@ -31,6 +31,13 @@ jobs:
     
     pytest:
         runs-on: ubuntu-latest
+
+        services:
+          redis:
+            image: redis:7-alpine
+            ports:
+              - "6379:6379"
+
         env:
             UV_CACHE_DIR: /tmp/.uv-cache
         steps:
@@ -52,6 +59,9 @@ jobs:
             
             - name: Run tests
               env:
+                REDIS_HOST: localhost
+                REDIS_PORT: 6379
+                REDIS_DB: 0
                 TEST_DB_URL: ${{ vars.TEST_DB_URL }}
                 JWT_SECRET: ${{ vars.JWT_SECRET }}
                 QUART_SCHEMA_CONVERT_CASING: ${{ vars.QUART_SCHEMA_CONVERT_CASING }}
