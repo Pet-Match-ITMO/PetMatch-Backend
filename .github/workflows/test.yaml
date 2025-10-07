@@ -66,4 +66,5 @@ jobs:
                 JWT_SECRET: ${{ vars.JWT_SECRET }}
                 QUART_SCHEMA_CONVERT_CASING: ${{ vars.QUART_SCHEMA_CONVERT_CASING }}
                 PYTHONPATH: ${{ github.workspace }}/app
+                ML_API_URL: ${{ secrets.ML_API_URL}}
               run: uv run pytest -v
