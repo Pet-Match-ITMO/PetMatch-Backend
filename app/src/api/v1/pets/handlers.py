@@ -4,16 +4,36 @@ from quart import Blueprint, jsonify, current_app, abort
 from quart_schema import validate_request, validate_response
 from .scheme import PetsRequest, PetsResponse
 from src.utils import redis_cache
+import httpx
 
 dotenv.load_dotenv()
+ML_API_URL = os.environ['ML_API_URL']
 
 pets_bp = Blueprint("pets", __name__, url_prefix="/auth")
 
-@pets_bp.get("/pets")
+@pets_bp.get("/get_pets")
+@validate_response(list[PetsResponse], 200)
+@redis_cache
+async def get_pets():
+    response = httpx.get(ML_API_URL+'get_pets')
+    if response.status_code != 200:
+        print('Error getting pets')
+        return []
+    return [PetsResponse(**i) for i in response.json()]
+    
+
+@pets_bp.post("/get_next_pet")
 @validate_request(PetsRequest)
 @validate_response(PetsResponse, 200)
 @redis_cache
-async def get_pet(data: PetsRequest):
-    db_helper = current_app.config['db_helper']
-    async with db_helper.make_session() as session:
-        pass
+async def get_next_pet(data: PetsRequest):
+    response = httpx.post(
+        ML_API_URL+'get_next_pet',
+        headers={'Content-Type': 'application/json', 'accept':'application/json'},
+        json = data.model_dump(exclude_unset=True, exclude_none=True)
+        )
+    if response.status_code != 200:
+        print('Error getting next pet')
+        return []
+    return PetsResponse(**response.json())
+    
