@@ -1,8 +1,9 @@
-import json
-import functools
-import hashlib
-import redis.asyncio as aioredis
 import os
+import json
+import hashlib
+import functools
+from pydantic import BaseModel
+import redis.asyncio as aioredis
 
 
 
@@ -30,6 +31,14 @@ def redis_cache(ttl: int = 60):
 
             # Compute result
             result = await func(*args, **kwargs)
+
+            # check if no python classes are in response
+            if isinstance(result, list):
+                if result:
+                    if isinstance(result[0], BaseModel):
+                        result = [i.model_dump() for i in result]
+            elif isinstance(result, BaseModel):
+                result = result.model_dump()
 
             # Store in Redis with TTL
             await redis.setex(key, ttl, json.dumps(result))

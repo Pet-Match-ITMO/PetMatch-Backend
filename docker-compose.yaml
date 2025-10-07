@@ -10,6 +10,9 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - QUART_SCHEMA_CONVERT_CASING=${QUART_SCHEMA_CONVERT_CASING}
       - ML_API_URL=${ML_API_URL}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_DB=${REDIS_DB}
     volumes:
       - ./app/alembic/versions:/app/alembic/versions
     networks:

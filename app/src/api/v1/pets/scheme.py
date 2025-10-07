@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class OrigPhoto(BaseModel):
     height: int
@@ -14,7 +14,7 @@ class Photo(BaseModel):
 
 class Attachments(BaseModel):
     type: str
-    photo:Photo
+    photo: Photo | None = None
 
 class Age(BaseModel):
     years: int
@@ -27,26 +27,26 @@ class Contact(BaseModel):
 
 class Health(BaseModel):
     status: str
-    diseases: list[str]
-    vaccinations: list[str]
+    diseases: list[str] = []
+    vaccinations: list[str] = []
 
 class PetInfo(BaseModel):
     age: Age
-    vaccinations: bool
-    sterilization: bool
+    vaccinations: bool | None = False
+    sterilization: bool | None = False
     health: Health
-    temperament: list[str]
+    temperament: list[str] = []
     contact: Contact
     name: str
     birth_place: str
     grow_up_with: str
     previous_owner: str
-    owner_requirements: list[str]
+    owner_requirements: list[str] = []
 
 class PetsResponse(BaseModel):
     id: int
     attachments: list[Attachments]
-    new_token: int
+    next_token: int
     description: str
     pet_info: PetInfo
 
@@ -54,3 +54,5 @@ class PetsRequest(BaseModel):
     user_id: int
     next_token: int  
 
+class PetsQuery(BaseModel):
+    limit: int = Field(default=50)
