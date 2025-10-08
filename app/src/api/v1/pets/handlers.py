@@ -1,13 +1,11 @@
-import os
-import dotenv
 from quart import Blueprint
 from quart_schema import validate_request, validate_response, validate_querystring
 from .scheme import PetsRequest, PetsResponse, PetsQuery
 from src.utils import redis_cache
+from decouple import config
 import httpx
 
-dotenv.load_dotenv()
-ML_API_URL = os.environ['ML_API_URL']
+ML_API_URL = config('ML_API_URL')
 pets_bp = Blueprint("pets", __name__, url_prefix="/pets")
 
 

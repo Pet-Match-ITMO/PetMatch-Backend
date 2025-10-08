@@ -17,6 +17,11 @@ required_vars=(
     "POSTGRES_PASSWORD"
     "JWT_SECRET"
     "QUART_SCHEMA_CONVERT_CASING"
+    "ML_API_URL"
+    "REDIS_HOST"
+    "REDIS_PORT"
+    "REDIS_DB"
+    "REDIS_PASSWORD"
 )
 
 for var in "${required_vars[@]}"; do
@@ -43,6 +48,15 @@ JWT_SECRET=${JWT_SECRET}
 
 # Quart Configuration
 QUART_SCHEMA_CONVERT_CASING=${QUART_SCHEMA_CONVERT_CASING}
+
+# ML API Configuration
+ML_API_URL=${ML_API_URL}
+
+# Redis Configuration
+REDIS_HOST=${REDIS_HOST}
+REDIS_PORT=${REDIS_PORT}
+REDIS_DB=${REDIS_DB}
+REDIS_PASSWORD=${REDIS_PASSWORD}
 
 # Generated at: $(date)
 EOF

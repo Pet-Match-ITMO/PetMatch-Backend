@@ -5,6 +5,7 @@ services:
       - '8080:8080'
     depends_on:
       - db
+      - redis
     environment:
       - DB_URL=${DB_URL}
       - JWT_SECRET=${JWT_SECRET}
@@ -33,10 +34,15 @@ services:
 
 
   redis:
-    image: redis:7-alpine          # small, fast image
+    image: redis:7-alpine
     ports:
-      - "6379:6379"                # expose Redis on localhost:6379
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    command: redis-server --requirepass ${REDIS_PASSWORD}
     restart: always
+    networks:
+      - petmatch-network
 
 
 volumes:

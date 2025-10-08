@@ -75,6 +75,11 @@ jobs:
                   export POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}"
                   export JWT_SECRET="${{ secrets.JWT_SECRET }}"
                   export QUART_SCHEMA_CONVERT_CASING="${{ secrets.QUART_SCHEMA_CONVERT_CASING }}"
+                  export ML_API_URL="${{ secrets.ML_API_URL }}"
+                  export REDIS_HOST="${{ secrets.REDIS_HOST }}"
+                  export REDIS_PORT="${{ secrets.REDIS_PORT }}"
+                  export REDIS_DB="${{ secrets.REDIS_DB }}"
+                  export REDIS_PASSWORD="${{ secrets.REDIS_PASSWORD }}"
                   export GHCR_TOKEN="${{ secrets.GITHUB_TOKEN }}"
                   export GHCR_USERNAME="${{ github.actor }}"
                   

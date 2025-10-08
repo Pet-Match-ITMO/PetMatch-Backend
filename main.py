@@ -1,5 +1,5 @@
-import os
 import uvicorn
+from decouple import config
 
 from quart import Quart
 from quart_schema import QuartSchema
@@ -21,7 +21,7 @@ def create_app():
     )
     
     async def create_lifespan_handler():
-        app.config['db_helper'] = DBHelper(os.environ['DB_URL'])
+        app.config['db_helper'] = DBHelper(config('DB_URL'))
         yield
 
     app.while_serving(create_lifespan_handler)

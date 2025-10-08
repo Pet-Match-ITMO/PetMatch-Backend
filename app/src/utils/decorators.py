@@ -1,18 +1,19 @@
-import os
 import json
 import hashlib
 import functools
 from pydantic import BaseModel
 import redis.asyncio as aioredis
+from decouple import config
 
 
 
 # Create async Redis client
 redis = aioredis.Redis(
-    host = os.environ['REDIS_HOST'],
-    port=os.environ['REDIS_PORT'], 
-    db=os.environ['REDIS_DB']
-    )
+    host=config('REDIS_HOST'),
+    port=config('REDIS_PORT', cast=int), 
+    db=config('REDIS_DB', cast=int),
+    password=config('REDIS_PASSWORD', default=None)
+)
 
 def redis_cache(ttl: int = 60):
     """Async Redis cache decorator (works with async functions)."""

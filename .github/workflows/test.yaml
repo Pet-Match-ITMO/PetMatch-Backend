@@ -62,9 +62,10 @@ jobs:
                 REDIS_HOST: localhost
                 REDIS_PORT: 6379
                 REDIS_DB: 0
+                REDIS_PASSWORD: ""
                 TEST_DB_URL: ${{ vars.TEST_DB_URL }}
                 JWT_SECRET: ${{ vars.JWT_SECRET }}
                 QUART_SCHEMA_CONVERT_CASING: ${{ vars.QUART_SCHEMA_CONVERT_CASING }}
                 PYTHONPATH: ${{ github.workspace }}/app
-                ML_API_URL: ${{ secrets.ML_API_URL}}
+                ML_API_URL: http://localhost:8000/
               run: uv run pytest -v
