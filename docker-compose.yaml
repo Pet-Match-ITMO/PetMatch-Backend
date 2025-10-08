@@ -5,10 +5,15 @@ services:
       - '8080:8080'
     depends_on:
       - db
+      - redis
     environment:
       - DB_URL=${DB_URL}
       - JWT_SECRET=${JWT_SECRET}
       - QUART_SCHEMA_CONVERT_CASING=${QUART_SCHEMA_CONVERT_CASING}
+      - ML_API_URL=${ML_API_URL}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_DB=${REDIS_DB}
     volumes:
       - ./app/alembic/versions:/app/alembic/versions
     networks:
@@ -26,6 +31,19 @@ services:
       - pg_data:/var/lib/postgresql/data
     networks:
       - petmatch-network
+
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    restart: always
+    networks:
+      - petmatch-network
+
 
 volumes:
   pg_data:

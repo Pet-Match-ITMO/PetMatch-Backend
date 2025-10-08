@@ -1,13 +1,10 @@
-import os
 from logging.config import fileConfig
+from decouple import config as env_config
 
 from sqlalchemy import pool, engine_from_config
 
 from alembic import context
 from src.db import Base
-
-import dotenv
-dotenv.load_dotenv()
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -30,7 +27,7 @@ target_metadata = Base.metadata
 # ... etc.
 
 # Используем отдельный URL для Alembic (синхронный драйвер)
-alembic_db_url = os.environ.get('ALEMBIC_DB_URL', os.environ['DB_URL'])
+alembic_db_url = env_config('ALEMBIC_DB_URL', default=env_config('DB_URL'))
 # Убеждаемся что используется синхронный драйвер для Alembic
 if '+asyncpg' in alembic_db_url:
     alembic_db_url = alembic_db_url.replace('+asyncpg', '')

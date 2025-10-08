@@ -1,7 +1,6 @@
-import os
 import datetime
 import jwt
-import dotenv
+from decouple import config
 from quart import Blueprint, jsonify, current_app, abort
 from quart_schema import validate_request, validate_response
 from . import crud
@@ -11,8 +10,6 @@ from .scheme import (
     AuthResponse,
 )
 from .exceptions import DatabaseException
-
-dotenv.load_dotenv()
 
 # Auth blueprint
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
@@ -34,7 +31,7 @@ async def register(data: RegisterRequest):
             return jsonify({"error": "User creation failed", "details": str(e)}), 500
 
         # Generate token
-        secret_key = os.environ["JWT_SECRET"]
+        secret_key = config("JWT_SECRET")
         token_data = {
             "user_id": new_user.id,
             "exp": datetime.datetime.now() + datetime.timedelta(hours=24)
@@ -61,7 +58,7 @@ async def login(data: LoginRequest):
             return jsonify({"error": "Invalid credentials"}), 401
 
         # Generate token
-        secret_key = os.environ["JWT_SECRET"]
+        secret_key = config("JWT_SECRET")
         token_data = {
             "user_id": user.id,
             "exp": datetime.datetime.now() + datetime.timedelta(hours=24)

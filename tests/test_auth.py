@@ -1,8 +1,6 @@
-import os
-import dotenv
-
 import pytest
 import pytest_asyncio
+from decouple import config
 
 from quart import Quart
 from quart_schema import QuartSchema
@@ -13,15 +11,11 @@ from app.src.db.models.base import Base
 from app.src.db.utils.helper import DBHelper
 from app.src.scheme import ErrorResponse
 
-# Set environment variables before any imports
-os.environ['QUART_SCHEMA_CONVERT_CASING'] = 'False'
-dotenv.load_dotenv("test.env")
-
 
 @pytest_asyncio.fixture
 async def test_db():
     # Use in-memory SQLite for tests
-    db_url = os.environ['TEST_DB_URL']
+    db_url = config('TEST_DB_URL')
     db_helper = DBHelper(db_url)
     async with db_helper.engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
