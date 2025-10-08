@@ -1,5 +1,5 @@
 from logging.config import fileConfig
-from decouple import config
+from decouple import config as env_config
 
 from sqlalchemy import pool, engine_from_config
 
@@ -27,7 +27,7 @@ target_metadata = Base.metadata
 # ... etc.
 
 # Используем отдельный URL для Alembic (синхронный драйвер)
-alembic_db_url = config('ALEMBIC_DB_URL', default=config('DB_URL'))
+alembic_db_url = env_config('ALEMBIC_DB_URL', default=env_config('DB_URL'))
 # Убеждаемся что используется синхронный драйвер для Alembic
 if '+asyncpg' in alembic_db_url:
     alembic_db_url = alembic_db_url.replace('+asyncpg', '')
