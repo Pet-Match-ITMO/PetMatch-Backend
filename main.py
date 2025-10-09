@@ -19,7 +19,7 @@ def create_app():
         app,
         allow_origin="*",
     )
-    
+
     async def create_lifespan_handler():
         app.config['db_helper'] = DBHelper(config('DB_URL'))
         yield

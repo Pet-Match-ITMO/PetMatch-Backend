@@ -1,9 +1,10 @@
-from quart import Blueprint
+from quart import Blueprint, jsonify
 from quart_schema import validate_request, validate_response, validate_querystring
 from .scheme import PetsRequest, PetsResponse, PetsQuery
 from src.utils import redis_cache
 from decouple import config
 import httpx
+
 
 ML_API_URL = config('ML_API_URL')
 pets_bp = Blueprint("pets", __name__, url_prefix="/pets")
@@ -33,6 +34,6 @@ async def get_next_pet(data: PetsRequest):
         )
     if response.status_code != 200:
         print('Error getting next pet')
-        return []
+        return jsonify({"error": "Query failed", "details": response.text}), 500
     return PetsResponse(**response.json())
 
