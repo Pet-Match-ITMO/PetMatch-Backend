@@ -1,12 +1,16 @@
+import dotenv
 import pytest_asyncio
 from quart import Quart
 from quart_schema import QuartSchema
 from decouple import config
-from app.src.api.v1.auth.handlers import auth_bp
 from app.src.db.models.base import Base
 from app.src.db.utils.helper import DBHelper
 from app.src.scheme import ErrorResponse
 from werkzeug.exceptions import HTTPException
+import redis.asyncio as aioredis
+from testcontainers.redis import RedisContainer
+
+dotenv.load_dotenv("test.env")
 
 
 @pytest_asyncio.fixture
@@ -23,7 +27,23 @@ async def test_db():
 
 
 @pytest_asyncio.fixture
-async def template_app(test_db):
+async def redis_conn_pool():
+    with RedisContainer("redis:7-alpine", password=config("REDIS_PASSWORD")) as redis_container:
+        host = redis_container.get_container_host_ip()
+        port = redis_container.get_exposed_port(
+            config("REDIS_PORT", cast=int)
+        )
+
+        yield aioredis.ConnectionPool(
+            host=host,
+            port=port,
+            db=config("REDIS_DB", cast=int),
+            password=config("REDIS_PASSWORD"),
+        )
+
+
+@pytest_asyncio.fixture
+async def template_app(test_db, redis_conn_pool):
     app = Quart(__name__)
 
     QuartSchema(app)
@@ -36,6 +56,9 @@ async def template_app(test_db):
     
     # Use the test_db fixture directly
     app.config['db_helper'] = test_db
+
+    # redis connection pool
+    app.config['redis_conn_pool'] = redis_conn_pool 
 
     @app.errorhandler(HTTPException)
     async def handle_http_exception(e: HTTPException):

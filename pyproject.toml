@@ -27,5 +27,10 @@ dependencies = [
     "redis>=6.4.0",
     "ruff>=0.13.0",
     "sqlalchemy>=2.0.43",
+    "testcontainers[redis]>=4.13.2",
     "uvicorn>=0.35.0",
 ]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"

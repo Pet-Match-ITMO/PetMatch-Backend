@@ -1,5 +1,6 @@
 import uvicorn
 from decouple import config
+import redis.asyncio as aioredis
 
 from quart import Quart
 from quart_schema import QuartSchema
@@ -22,7 +23,17 @@ def create_app():
 
     async def create_lifespan_handler():
         app.config['db_helper'] = DBHelper(config('DB_URL'))
+
+        app.config['redis_conn_pool'] = aioredis.ConnectionPool(
+            host=config('REDIS_HOST'),
+            port=config('REDIS_PORT', cast=int), 
+            db=config('REDIS_DB', cast=int),
+            password=config('REDIS_PASSWORD', default=None)
+        )
+
         yield
+
+        await app.config['redis_conn_pool'].disconnect()
 
     app.while_serving(create_lifespan_handler)
         

@@ -1,7 +1,6 @@
 import pytest
 import pytest_asyncio
 from app.src.api.v1.auth.handlers import auth_bp
-from .fixtures import template_app
 
 
 @pytest_asyncio.fixture
