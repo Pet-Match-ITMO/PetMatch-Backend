@@ -37,9 +37,13 @@ jobs:
             image: redis:7-alpine
             ports:
               - "6379:6379"
+          docker:
+            image: docker:24.0.2
 
         env:
             UV_CACHE_DIR: /tmp/.uv-cache
+            TESTCONTAINERS_RYUK_DISABLED: "true"
+            TESTCONTAINERS_CHECKS_DISABLE: "true"
         steps:
             - uses: actions/checkout@v5
 
